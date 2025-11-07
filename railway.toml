@@ -1,0 +1,13 @@
+# Railway Nixpacks configuration
+[providers.node]
+
+[variables]
+NODE_ENV = "production"
+CI = "false"
+GENERATE_SOURCEMAP = "false"
+
+[build]
+provider = "node"
+
+[start]
+cmd = "npm start"
