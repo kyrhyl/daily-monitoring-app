@@ -19,10 +19,29 @@ app.set('trust proxy', true);
 
 // Security middleware
 app.use(helmet());
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+
+// CORS configuration for development and production
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, etc.)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:3000', // Development
+      'https://daily-monitoring-app-production.up.railway.app', // Production
+      process.env.FRONTEND_URL // Custom frontend URL
+    ].filter(Boolean);
+    
+    if (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'production') {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -88,6 +107,19 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Serve React static files in production
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path');
+  
+  // Serve static files from React build
+  app.use(express.static(path.join(__dirname, '../../frontend/build')));
+  
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/build', 'index.html'));
+  });
+}
+
 // Global error handling middleware
 app.use((error, req, res, next) => {
   console.error('Global error handler:', error);
@@ -99,15 +131,17 @@ app.use((error, req, res, next) => {
   });
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    error: {
-      message: 'Route not found',
-      status: 404
-    }
+// 404 handler for API routes only (in development) 
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res) => {
+    res.status(404).json({
+      error: {
+        message: 'Route not found',
+        status: 404
+      }
+    });
   });
-});
+}
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
