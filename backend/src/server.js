@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Trust proxy for Railway deployment
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet());
@@ -47,7 +47,9 @@ app.use(cors(corsOptions));
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
-  trustProxy: true
+  trustProxy: 1, // Trust first proxy
+  standardHeaders: true,
+  legacyHeaders: false
 });
 app.use('/api/', limiter);
 
