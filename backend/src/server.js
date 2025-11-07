@@ -37,12 +37,14 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection
-const mongoUrl = process.env.MONGO_URL || process.env.MONGODB_URI || 'mongodb://localhost:27017/daily-monitoring';
+const mongoUrl = process.env.MONGODB_URI || process.env.MONGO_URL || 'mongodb://localhost:27017/daily-monitoring';
 console.log('Connecting to MongoDB:', mongoUrl.replace(/\/\/.*@/, '//*****@')); // Hide credentials in logs
 
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  authSource: 'admin', // Required for Railway MongoDB
+  authMechanism: 'SCRAM-SHA-1'
 })
 .then(() => {
   console.log('Connected to MongoDB');
