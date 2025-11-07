@@ -1,0 +1,12 @@
+[phases.setup]
+nixPkgs = ['nodejs_18']
+
+[phases.install]
+cmds = ['npm install --production']
+
+[start]
+cmd = 'npm start'
+
+[variables]
+NODE_ENV = 'production'
+PORT = '8080'
