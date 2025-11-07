@@ -1,0 +1,43 @@
+{
+  "name": "daily-monitoring-app",
+  "version": "1.0.0",
+  "description": "Full-stack daily monitoring and task management application",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm start",
+    "build": "cd frontend && npm run build",
+    "install-server": "cd backend && npm install",
+    "install-client": "cd frontend && npm install",
+    "install-all": "npm run install-server && npm run install-client",
+    "start": "cd backend && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/daily-monitoring.git"
+  },
+  "keywords": [
+    "react",
+    "nodejs",
+    "express",
+    "mongodb",
+    "task-management",
+    "project-management",
+    "team-collaboration",
+    "daily-monitoring"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/daily-monitoring/issues"
+  },
+  "homepage": "https://github.com/yourusername/daily-monitoring#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
